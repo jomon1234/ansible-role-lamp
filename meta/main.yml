@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: lamp-setup
+  role_name: lamp
   author: jomon
   description: Installation and configuration of LAMP setup
   company: nothing
