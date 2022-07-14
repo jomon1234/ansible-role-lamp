@@ -1,0 +1,37 @@
+---
+# tasks file for lamp-setup
+
+- name: Installing Dependencies
+  ansible.builtin.apt:    
+    name: "{{ item }}"
+    state: present
+    # update_cache: true
+  loop: "{{ dependenci_list }}"
+
+- name: renaming existing apache config
+  ansible.builtin.copy:
+    src: /etc/apache2/sites-enabled/apache2.conf
+    dest: /etc/apache2/sites-enabled/apache2.conf_bak
+    remote_src: true
+  register: apachestatus
+  ignore_errors: true
+
+- name: Deleting old apache conf
+  ansible.builtin.file:
+    path: /etc/apache2/sites-enabled/apache2.conf
+    state: absent
+  ignore_errors: true
+  when: apachestatus.failed == false 
+
+- name: creating Apache virtualhost using template
+  ansible.builtin.template:
+    src: task5apachevirtual.conf.j2
+    dest: /etc/apache2/sites-enabled/task5apachevirtual.conf
+
+- name: configuring sites
+  ansible.builtin.shell:
+    cmd: sudo a2enmod rewrite  
+  ignore_errors: true     
+  notify: Restart Apache if syntax is okay
+
+

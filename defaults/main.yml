@@ -1,0 +1,4 @@
+---
+# defaults file for lamp-setup
+http_port: 80
+document_root: /var/www/html/
